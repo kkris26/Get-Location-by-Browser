@@ -1,13 +1,12 @@
 function getCurrentLocation() {
   const options = {
-    enableHighAccuracy: false,
+    enableHighAccuracy: true,
     timeout: 5000,
     maximumAge: 60000,
   };
 
   function success(pos) {
     const crd = pos.coords;
-
     console.log("Your current position is:");
     const lat = crd.latitude;
     const lon = crd.longitude;
