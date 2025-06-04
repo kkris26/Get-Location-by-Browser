@@ -41,10 +41,13 @@ getCurrentLocation();
 //   const data = await response.json();
 //   console.log(data);
 // }
-
+const now = new Date();
+const hour = now.getHours()
+const minute = now.getMinutes()
 function displayData(lat, lon) {
   document.getElementById("display").innerHTML = `
 <p>Current Position</p>
+<b>Current Time : ${hour} : ${minute} </b>
 <p>Latitude : ${lat}</p>
 <p>Longitude: ${lon}</p>
 <b id="area">Area: ${lon}</b>
