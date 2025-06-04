@@ -1,4 +1,10 @@
 function getCurrentLocation() {
+  const options = {
+    enableHighAccuracy: false,
+    timeout: 5000,
+    maximumAge: 60000,
+  };
+
   function success(pos) {
     const crd = pos.coords;
 
@@ -17,7 +23,7 @@ function getCurrentLocation() {
     console.log(err);
   }
 
-  return navigator.geolocation.getCurrentPosition(success, error);
+  return navigator.geolocation.getCurrentPosition(success, error, options);
 }
 
 getCurrentLocation();
