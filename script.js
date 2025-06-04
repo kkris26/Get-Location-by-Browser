@@ -41,13 +41,19 @@ async function getWeather(lat, lon) {
   const data = await response.json();
   console.log(data);
 }
-const now = new Date();
-const hour = now.getHours()
-const minute = now.getMinutes()
+const get = new Date();
+const getHour = get.getHours();
+const getMinute = get.getMinutes();
+const getSecond = get.getSeconds();
 function displayData(lat, lon) {
+  const now = new Date();
+  const nowHour = now.getHours();
+  const nowMinute = now.getMinutes();
+  const nowSecond = now.getSeconds();
   document.getElementById("display").innerHTML = `
 <p>Current Position</p>
-<b>Current Time : ${hour} : ${minute} </b>
+<b>Start Time : ${getHour} : ${getMinute} :: ${getSecond} </b>
+<b>Current Time : ${nowHour} : ${nowMinute} :: ${nowSecond}</b>
 <p>Latitude : ${lat}</p>
 <p>Longitude: ${lon}</p>
 <b id="area">Area: ${lon}</b>
