@@ -10,6 +10,7 @@ function getCurrentLocation() {
     console.log(`More or less ${crd.accuracy} meters.`);
     getLocationName(lat, lon);
     getWeather(lat, lon);
+    displayData(lat, lon);
   }
 
   function error(err) {
@@ -39,4 +40,54 @@ async function getWeather(lat, lon) {
   const response = await fetch(url);
   const data = await response.json();
   console.log(data);
+}
+
+function displayData(lat, lon) {
+  document.getElementById("display").innerHTML = `
+<p>Current Position</p>
+<p>Latitude : ${lat}</p>
+<p>Longitude: ${lon}</p>
+<b id="area">Area: ${lon}</b>
+<div id="selisih"> ${lon}</div>
+`;
+
+  const lokasiTarget = {
+    targetLat: -8.679946080510842,
+    targetLon: 115.2029570922165,
+  };
+
+  document.getElementById("target").innerHTML = `
+  <p> Kantor Position</p>
+<p>Kantor Latitude : ${lokasiTarget.targetLat}</p>
+<p>Kantor Longitude: ${lokasiTarget.targetLon}</p>
+  `;
+
+  const radiusMeter = 15;
+  const meterPerDegree = 111320;
+
+  const radiusDerajat = radiusMeter / meterPerDegree;
+
+  const latDiff = Math.abs(lat - lokasiTarget.targetLat);
+  const lngDiff = Math.abs(lon - lokasiTarget.targetLon);
+  console.log(radiusDerajat - latDiff);
+  console.log(radiusDerajat - lngDiff);
+
+  document.getElementById("selisih").innerHTML = `
+  <p>Minimum Radius : ${radiusDerajat}</p>
+  <p>Selisih Lat : ${latDiff}</p>
+  <p>Selisih Lon : ${lngDiff}</p>
+  <p>Selisih Lat - Radius : ${radiusDerajat - latDiff}</p>
+  <p>Selisih Lon - Radius: ${radiusDerajat - lngDiff}</p>
+
+  `;
+
+  const validate = latDiff <= radiusDerajat && lngDiff <= radiusDerajat;
+
+  document.getElementById("area").innerText = `
+  ${
+    validate
+      ? "Anda berada di Radius Kantor"
+      : "Anda berada di luar Radius Kantor"
+  }
+  `;
 }
