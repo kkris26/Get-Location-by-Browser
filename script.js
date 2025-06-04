@@ -62,7 +62,7 @@ function displayData(lat, lon) {
 <p>Kantor Longitude: ${lokasiTarget.targetLon}</p>
   `;
 
-  const radiusMeter = 30;
+  const radiusMeter = 50;
   const meterPerDegree = 111320;
 
   const radiusDerajat = radiusMeter / meterPerDegree;
