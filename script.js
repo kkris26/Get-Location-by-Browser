@@ -1,3 +1,13 @@
+// const userLocation = {
+//   userLat: -8.67995199842529,
+//   userLon: 115.20281327239643,
+// };
+const lokasiTarget = {
+  targetLat: -8.679946080510842,
+  targetLon: 115.2029570922165,
+};
+let radiusMeter = 50;
+
 function getCurrentLocation() {
   const options = {
     enableHighAccuracy: true,
@@ -16,16 +26,27 @@ function getCurrentLocation() {
     getLocationName(lat, lon);
     getWeather(lat, lon);
     displayData(lat, lon);
+    validateRadius(lat, lon);
   }
 
   function error(err) {
-    console.log(err);
+    console.log(err.message);
+    document.getElementById("target").innerHTML = `
+    <p>${err.message}</p>
+    `;
   }
 
   return navigator.geolocation.getCurrentPosition(success, error, options);
 }
 
-getCurrentLocation();
+
+
+
+window.onload = () => {
+  getCurrentLocation();
+  // displayData(userLocation.userLat, userLocation.userLon);
+  // validateRadius(userLocation.userLat, userLocation.userLon);
+};
 
 async function getLocationName(lat, lon) {
   const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&zoom=18&format=jsonv2`;
@@ -46,37 +67,9 @@ async function getWeather(lat, lon) {
   const data = await response.json();
   console.log(data);
 }
-const get = new Date();
-const getHour = get.getHours();
-const getMinute = get.getMinutes();
-const getSecond = get.getSeconds();
-function displayData(lat, lon) {
-  const now = new Date();
-  const nowHour = now.getHours();
-  const nowMinute = now.getMinutes();
-  const nowSecond = now.getSeconds();
-  document.getElementById("display").innerHTML = `
-<p>Current Position</p>
-<b>Start Time : ${getHour} : ${getMinute} :: ${getSecond} </b>
-<b>Current Time : ${nowHour} : ${nowMinute} :: ${nowSecond}</b>
-<p>Latitude : ${lat}</p>
-<p>Longitude: ${lon}</p>
-<b id="area">Area: ${lon}</b>
-<div id="selisih"> ${lon}</div>
-`;
 
-  const lokasiTarget = {
-    targetLat: -8.679946080510842,
-    targetLon: 115.2029570922165,
-  };
-
-  document.getElementById("target").innerHTML = `
-  <p> Kantor Position</p>
-<p>Kantor Latitude : ${lokasiTarget.targetLat}</p>
-<p>Kantor Longitude: ${lokasiTarget.targetLon}</p>
-  `;
-
-  const radiusMeter = 50;
+function validateRadius(lat, lon) {
+  document.getElementById("input-radius").value = radiusMeter
   const meterPerDegree = 111320;
 
   const radiusDerajat = radiusMeter / meterPerDegree;
@@ -87,7 +80,7 @@ function displayData(lat, lon) {
   console.log(radiusDerajat - lngDiff);
 
   document.getElementById("selisih").innerHTML = `
-  <p>Radius : ${radiusMeter} M</p>
+  <p id="radius">Radius : ${radiusMeter} M</p>
   <p>Minimum Radius : ${radiusDerajat}</p>
   <p>Selisih Lat : ${latDiff}</p>
   <p>Selisih Lon : ${lngDiff}</p>
@@ -98,11 +91,49 @@ function displayData(lat, lon) {
 
   const validate = latDiff <= radiusDerajat && lngDiff <= radiusDerajat;
 
-  document.getElementById("area").innerText = `
+  document.getElementById("area").innerHTML = `<b> Area : 
   ${
     validate
       ? "Anda berada di Radius Kantor"
       : "Anda berada di luar Radius Kantor"
   }
+    </b>
   `;
+}
+
+function getCurrentTime() {
+  const get = new Date();
+  const getHour = get.getHours();
+  const getMinute = get.getMinutes();
+  const getSecond = get.getSeconds();
+  const getMiliSecond = get.getMilliseconds();
+  const output = `${getHour} : ${getMinute} : ${getSecond} : ${getMiliSecond} `;
+  return output;
+}
+const timeOnLoad = getCurrentTime();
+function displayData(lat, lon) {
+  document.getElementById("display").innerHTML = `
+<p>Your Position</p>
+<p>Latitude : ${lat}</p>
+<p>Longitude: ${lon}</p>
+<b>Start Time : ${timeOnLoad}</b>
+<b>Current Time : ${getCurrentTime()}</b>
+<hr></hr>
+<div id="area"></div>
+<div id="selisih"></div>
+`;
+
+  document.getElementById("target").innerHTML = `
+  <p> Kantor Position</p>
+<p>Kantor Latitude : ${lokasiTarget.targetLat}</p>
+<p>Kantor Longitude: ${lokasiTarget.targetLon}</p>
+  `;
+
+  const formInput = document.getElementById("form-input-radius");
+  formInput.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const inputRadius = document.getElementById("input-radius").value;
+    radiusMeter = inputRadius;
+    validateRadius(lat, lon);
+  });
 }
