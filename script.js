@@ -30,7 +30,7 @@ function getCurrentLocation() {
   }
 
   function error(err) {
-    console.log(err.message);
+    console.log(err);
     document.getElementById("target").innerHTML = `
     <p>${err.message}</p>
     `;
@@ -38,9 +38,6 @@ function getCurrentLocation() {
 
   return navigator.geolocation.getCurrentPosition(success, error, options);
 }
-
-
-
 
 window.onload = () => {
   getCurrentLocation();
@@ -69,7 +66,7 @@ async function getWeather(lat, lon) {
 }
 
 function validateRadius(lat, lon) {
-  document.getElementById("input-radius").value = radiusMeter
+  document.getElementById("input-radius").value = radiusMeter;
   const meterPerDegree = 111320;
 
   const radiusDerajat = radiusMeter / meterPerDegree;
@@ -111,13 +108,14 @@ function getCurrentTime() {
   return output;
 }
 const timeOnLoad = getCurrentTime();
+
 function displayData(lat, lon) {
   document.getElementById("display").innerHTML = `
 <p>Your Position</p>
 <p>Latitude : ${lat}</p>
 <p>Longitude: ${lon}</p>
-<b>Start Time : ${timeOnLoad}</b>
-<b>Current Time : ${getCurrentTime()}</b>
+<b>ST : ${timeOnLoad}</b>
+<b>CT : ${getCurrentTime()}</b>
 <hr></hr>
 <div id="area"></div>
 <div id="selisih"></div>
